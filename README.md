@@ -33,17 +33,22 @@
 </code>
 </pre>
 3. Create instance of parser
+<pre>
+<code>
  IfParser ifp = new IfParser(dataProvider);
- 
+ </code>
+</pre>
  dataProvider - up to you - you must create it. Please look at Tests.java
  
 4. Now you are ready to create Java representation for expressions like this
+<pre>
 integerField >4
 doubleField <=4.6
 doubleField!=3.4
 !(textField != "abc2" )
-textField == "k'j(\"dfks \" ||( integerField>2 && doubleField<6)
+textField == "k'j(\"dfks " ||( integerField>2 && doubleField<6)
 ((doubleField==4.0) && doubleField<4.5) && integerField<=5
+</pre>
 
 This representation decoupled from data, so you can cache it and reuse
 
@@ -57,7 +62,7 @@ list.stream().filter(s ->
 
 Restrictions:
 It does not support Boolean at this time (first RC version)
-It does not support expressions like "abc2" != textField  
+It does not support expressions like <strong>"abc2" != textField  </strong>
 , but only textField != "abc2"
 (left side: variable, right side: static value)
 
