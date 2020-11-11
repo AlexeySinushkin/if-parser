@@ -39,18 +39,15 @@ public class Tests {
         }
 
 
-        DataProvider<TestObject> dataProvider = new DataProvider<TestObject>() {
-            @Override
-            public Object getValue(TestObject item, String fieldName) {
-                try {
-                    return TestObject.class.getField(fieldName).get(item);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                }
-                return null;
+        DataProvider<TestObject> dataProvider = (item, fieldName) -> {
+            try {
+                return TestObject.class.getField(fieldName).get(item);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
             }
+            return null;
         };
 
         IfParser ifp = new IfParser(fieldName ->
