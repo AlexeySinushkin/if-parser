@@ -21,14 +21,15 @@
 	
 
 2. Fill list for testing
-
+<pre>
+<code>
      List<TestObject> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             list.add(new TestObject("abc" + String.valueOf(i),
                     i, i, LocalDateTime.now().plus(i, ChronoUnit.MINUTES)));
         }
-
-
+</code>
+<pre>
 3. Create instance of parser
  IfParser ifp = new IfParser(dataProvider);
  
@@ -45,11 +46,12 @@ textField == "k'j(\"dfks \" ||( integerField>2 && doubleField<6)
 This representation decoupled from data, so you can cache it and reuse
 
 5. traverse through your data in synchro or parallel mode
+<pre><code>
 expression = ifp.parse("(textField == \"abc4\" ) && integerField<=5");
 list.stream().filter(s ->
                 expression.testValue(s, dataProvider))
 				.collect(Collectors.toList())
-
+	</code></pre>
 
 Restrictions:
 It does not support Boolean at this time (first RC version)
