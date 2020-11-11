@@ -1,3 +1,4 @@
+package ru.trackit.ifparser;
 import java.util.regex.Pattern;
 
 public class StringExpression extends AbstractExpression {

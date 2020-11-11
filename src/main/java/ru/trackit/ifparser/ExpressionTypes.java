@@ -1,4 +1,4 @@
-
+package ru.trackit.ifparser;
 
 public enum ExpressionTypes {
     More(">"),

@@ -1,3 +1,4 @@
+package ru.trackit.ifparser;
 public class IntegerExpression extends AbstractExpression {
     private String left;
     private int right;

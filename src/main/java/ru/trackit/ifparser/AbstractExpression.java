@@ -1,3 +1,5 @@
+package ru.trackit.ifparser;
+
 /**
  * == != >= <= > <
  */

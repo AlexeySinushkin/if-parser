@@ -1,4 +1,4 @@
-
+package ru.trackit.ifparser;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.Date;

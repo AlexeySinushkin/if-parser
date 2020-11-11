@@ -1,3 +1,4 @@
+package ru.trackit.ifparser;
 public class ParseException extends Exception {
 
     private final String expression;
