@@ -3,7 +3,8 @@
  
  Let's study on Test.java example
  1. Create Entity data object
- 
+ <pre>
+<code>
     public class TestObject {
         public String textField;
         public int integerField;
@@ -18,7 +19,8 @@
             this.datetimeField = datetimeField;
         }
     }
-	
+	</code>
+</pre>
 
 2. Fill list for testing
 <pre>
@@ -29,7 +31,7 @@
                     i, i, LocalDateTime.now().plus(i, ChronoUnit.MINUTES)));
         }
 </code>
-<pre>
+</pre>
 3. Create instance of parser
  IfParser ifp = new IfParser(dataProvider);
  
