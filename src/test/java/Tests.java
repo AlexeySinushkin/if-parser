@@ -29,8 +29,6 @@ public class Tests {
     }
 
 
-
-
     @Test
     public void Test() throws Exception {
 
@@ -53,20 +51,14 @@ public class Tests {
                 }
                 return null;
             }
-
-            @Override
-            public Class getTypeOrNull(String fieldName) {
-                try {
-                    return TestObject.class.getField(fieldName).getType();
-                } catch (NoSuchFieldException e) {
-                    return null;
-                }
-            }
         };
 
-        IfParser ifp = new IfParser(dataProvider);
+        IfParser ifp = new IfParser(fieldName ->
+        {
+            return TestObject.class.getField(fieldName).getType();
+        });
 
-        AbstractExpression expression = ifp.parse("textField == \"k'j(\\\"dfks \" ||"+
+        AbstractExpression expression = ifp.parse("textField == \"k'j(\\\"dfks \" ||" +
                 "( integerField>2 && doubleField<6)");
         List<TestObject> resultList = getCollect(list, dataProvider, expression);
         assert (resultList.size() == 3);
@@ -87,10 +79,10 @@ public class Tests {
         resultList = getCollect(list, dataProvider, expression);
         assert (resultList.size() == 1);
 
-        String middleTime = dataProvider.getDateTimeFormatter().format(list.get(5).datetimeField);
-        expression = ifp.parse("(datetimeField<\""+middleTime+"\")|| doubleField>=9.4");
+        String middleTime = ifp.getDateTimeFormatter().format(list.get(5).datetimeField);
+        expression = ifp.parse("(datetimeField<\"" + middleTime + "\")|| doubleField>=9.4");
         resultList = getCollect(list, dataProvider, expression);
-        assert (resultList.size() >3);
+        assert (resultList.size() > 3);
     }
 
     private List<TestObject> getCollect(List<TestObject> list, DataProvider<TestObject> dataProvider, AbstractExpression expression) {

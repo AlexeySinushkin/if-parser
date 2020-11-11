@@ -1,7 +1,7 @@
 package ru.trackit.ifparser;
 import java.time.LocalDateTime;
 
-public class DateTimeExpression extends AbstractExpression {
+class DateTimeExpression extends AbstractExpression {
     private String left;
     private LocalDateTime right;
     private ExpressionTypes expressionTypes;

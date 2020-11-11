@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Top level expression
  */
-public class CompositeExpression extends AbstractExpression {
+class CompositeExpression extends AbstractExpression {
 
      private final char OR = '|';
 

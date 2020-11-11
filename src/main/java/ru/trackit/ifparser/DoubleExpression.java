@@ -1,5 +1,5 @@
 package ru.trackit.ifparser;
-public class DoubleExpression extends AbstractExpression {
+class DoubleExpression extends AbstractExpression {
     private String left;
     private double right;
     private ExpressionTypes expressionTypes;

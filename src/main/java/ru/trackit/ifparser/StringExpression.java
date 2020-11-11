@@ -1,7 +1,7 @@
 package ru.trackit.ifparser;
 import java.util.regex.Pattern;
 
-public class StringExpression extends AbstractExpression {
+class StringExpression extends AbstractExpression {
     private String left;
     private String right;
     private ExpressionTypes expressionTypes;

@@ -1,8 +1,11 @@
 package ru.trackit.ifparser;
+
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Stack;
+import java.util.logging.Formatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,13 +20,19 @@ public class IfParser {
     private static final Pattern patternBraces = Pattern.compile("(^[(])|([)]$)");
     private static final String quoteRemover = "(^[\"])|([\"]$)";
 
-    private DataProvider dataProvider;
+    private TypeProvider dataProvider;
+    private DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-    public IfParser(DataProvider dataProvider) {
+    public IfParser(TypeProvider dataProvider) {
         this.dataProvider = dataProvider;
     }
 
-    public AbstractExpression parse(String whereClause) throws Exception {
+    public IfParser(TypeProvider dataProvider, DateTimeFormatter formatter) {
+        this.formatter = formatter;
+        this.dataProvider = dataProvider;
+    }
+
+    public AbstractExpression parse(String whereClause) throws ParseException, ReflectiveOperationException {
         whereClause = normalize(whereClause);
         char[] chars = whereClause.toCharArray();
 
@@ -54,13 +63,13 @@ public class IfParser {
                 insideTextPart = true;
             } else if (isOpenBracet(c)) {
                 insideExpression = false;
-                logicCharacter=0;
+                logicCharacter = 0;
                 stack.push(currentExpression);
                 currentExpression = new CompositeExpression(notFlag);
                 notFlag = false;
             } else if (isCloseBracet(c)) {
                 insideExpression = false;
-                logicCharacter=0;
+                logicCharacter = 0;
                 if (!textBuilder.isEmpty()) {
                     currentExpression.addFlat(getExpression(textBuilder.toString()));
                     textBuilder.reset();
@@ -80,15 +89,13 @@ public class IfParser {
                     }
                     currentExpression.addLogic(c);
                 }
-            } else if (isNot(c) && !insideExpression){
+            } else if (isNot(c) && !insideExpression) {
                 // ! before ( or boolean
                 // not a != operator
                 notFlag = true;
-            }
-            else {
+            } else {
                 logicCharacter = 0;
-                if (textBuilder.append(c, true))
-                {
+                if (textBuilder.append(c, true)) {
                     insideExpression = true;
                 }
             }
@@ -107,13 +114,13 @@ public class IfParser {
      * @return
      * @throws ParseException
      */
-    private AbstractExpression getExpression(String leafClause) throws ParseException {
+    private AbstractExpression getExpression(String leafClause) throws ParseException, ReflectiveOperationException {
         Matcher m = patternExpression.matcher(leafClause);
         if (m.find()) {
             String left = m.group("left");
             String right = m.group("right");
             ExpressionTypes exp = ExpressionTypes.parse(m.group("op"));
-            Type type = dataProvider.getTypeOrNull(left);
+            Type type = dataProvider.getType(left);
             //TODO: переворачиваем если аргументы перепутаны
             if (type == Integer.class || type == int.class) {
                 return new IntegerExpression(left, Integer.parseInt(right), exp);
@@ -121,11 +128,11 @@ public class IfParser {
                     type == Float.class || type == float.class) {
                 return new DoubleExpression(left, Double.parseDouble(right), exp);
             } else if (type == LocalDateTime.class) {
-                right = right.trim().replaceAll(quoteRemover,"");
-                LocalDateTime rightValue = LocalDateTime.parse(right, dataProvider.getDateTimeFormatter());
+                right = right.trim().replaceAll(quoteRemover, "");
+                LocalDateTime rightValue = LocalDateTime.parse(right, formatter);
                 return new DateTimeExpression(left, rightValue, exp);
             } else if (type == String.class) {
-                right = right.trim().replaceAll(quoteRemover,"");
+                right = right.trim().replaceAll(quoteRemover, "");
                 return new StringExpression(left, right, exp);
             }
         }
@@ -159,6 +166,10 @@ public class IfParser {
 
     private static String normalize(String whereClause) {
         return whereClause.trim();
+    }
+
+    public DateTimeFormatter getDateTimeFormatter() {
+        return formatter;
     }
 
     private class StringBuilderDecorator {
